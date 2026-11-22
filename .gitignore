@@ -1,0 +1,16 @@
+__pycache__/
+data/ml-100k/
+data/ml-100k.zip
+.mplconfig/
+results/test_predictions.csv
+
+/output/
+/results/
+/tmp/
+/data/
+/.venv/
+*.pyc
+/build_word_report.py
+/render_word_native.js
+/render_word_report.ps1
+/MEMBER_5_6_REPORT.md
