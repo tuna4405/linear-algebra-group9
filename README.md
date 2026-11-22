@@ -1,9 +1,11 @@
+# SVD Movie Recommender
+
 ## Files
 
 | File | Purpose |
 |---|---|
 | `svd_recommender.py` | Core NumPy SVD implementation, prediction, cold-start fallbacks and recommendations |
-| `run_experiments.py` | Reproduce both datasets' results, figures and report |
+| `run_experiments.py` | Run the toy and MovieLens experiments and save the fitted model, metrics, and figures |
 | `demo.py` | Predict a rating or display recommendations using the fitted model |
 | `tests/test_svd_recommender.py` | Numerical correctness and edge-case checks |
 | `data/toy_observed.csv` | Hand-made input matrix, blank cells are missing |
@@ -15,29 +17,58 @@
 | `results/experiment_metadata.json` | Versions, input hashes, seeds, selected k and timings |
 | `results/model_item_selected.npz` | Saved selected factors and baseline statistics |
 
-results/ is generated locally.
+The experiment runner generates the toy CSVs and the contents of `results/` locally.
 
-## Run
+## Run from a fresh clone
 
-Open a terminal in this folder. The current workspace already has the dependencies,
-dataset and generated results. For a fresh Python 3.10+ environment:
+Use PowerShell with Git and Python 3.10 or later installed. If you already cloned
+the repository, open PowerShell in that folder and start at step 2.
+
+### 1. Clone the repository
+
+```powershell
+git clone https://github.com/tuna4405/linear-algebra-group9.git
+Set-Location .\linear-algebra-group9
+```
+
+Run the remaining commands from this folder.
+
+### 2. Install the Python dependencies
 
 ```powershell
 python -m pip install -r requirements.txt
 ```
 
-If the dataset is absent, download the official archive and extract it locally:
+If `python` is unavailable and `py --version` works, use `py` in place of
+`python` throughout these steps.
+
+### 3. Download and extract MovieLens 100K
 
 ```powershell
-Invoke-WebRequest -Uri 'https://files.grouplens.org/datasets/movielens/ml-100k.zip' -OutFile 'data/ml-100k.zip'
-Expand-Archive -LiteralPath 'data/ml-100k.zip' -DestinationPath 'data' -Force
+New-Item -ItemType Directory -Path .\data -Force
+Invoke-WebRequest -Uri 'https://files.grouplens.org/datasets/movielens/ml-100k.zip' -OutFile '.\data\ml-100k.zip'
+Expand-Archive -LiteralPath '.\data\ml-100k.zip' -DestinationPath '.\data' -Force
+Test-Path -LiteralPath '.\data\ml-100k\u1.base'
 ```
 
-Then:
+The final command should print `True`.
+
+### 4. Run the tests and fit the model
 
 ```powershell
 python -m unittest discover -s tests -v
 python run_experiments.py
+```
+
+Wait for the experiment runner to finish. It saves the fitted model to
+`results/model_item_selected.npz`, which the demo loads.
+
+### 5. Try the demo
+
+The first command recommends movies for user 1. The second predicts that
+user's rating for movie 50.
+
+```powershell
 python demo.py --user 1
 python demo.py --user 1 --item 50
 ```
